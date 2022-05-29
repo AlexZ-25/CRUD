@@ -194,7 +194,15 @@ let editarDos = (index) => {
     const buttons = `<button type="button" class="btn btn-primary" id="${selectedEpisode.Nombre}" onclick="editarUno(this.id, ${index})">Editar</button><button type="button" class="btn btn-danger" onclick="eliminar()">Eliminar</button>`;
     botonEditar = document.getElementById('editarBoton');
     botonEditar.remove();
-    document.getElementsByTagName('tr')[index].innerHTML = `<td>${selectedEpisode.Id}</td><td>${selectedOption}</td><td>${buttons}</td>`;
+    lista = document.getElementsByTagName('tr');
+    for (i = 0; i < lista.length; i++) {
+        texto = String(lista[i]);
+        output = texto.includes(index);
+        if (output == true) {
+            document.getElementsByTagName('tr')[index].innerHTML = `<td>${selectedEpisode.Id}</td><td>${selectedOption}</td><td>${buttons}</td>`;
+            break;
+        }
+    }
 }
 
 // Botón eliminar
