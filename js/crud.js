@@ -163,12 +163,12 @@ let agregar = () => {
     for (i = 0; i < addedList.length; i++) {
         let textoInterior = addedList[i].innerText;
         output = textoInterior.includes(selectedOption);
-        if (output == true){
+        if (output == true) {
             alert('Este episodio ya ha sido añadido. Favor de seleccionar uno diferente.');
             break;
         }
     }
-    if (selectedOption != defaultOption && output == false) {   
+    if (selectedOption != defaultOption && output == false) {
         let tbody = document.getElementsByTagName('tbody');
         let largoLista = document.getElementsByTagName('tr');
         const selectedEpisode = sp.find(value => value.Nombre == selectedOption);
@@ -199,6 +199,14 @@ let editarDos = (index) => {
 
 // Botón eliminar
 let eliminar = (index) => {
-    
-    document.getElementsByTagName('tr')[index].remove()
+    lista = document.getElementsByTagName('tr');
+    // console.log(lista[1]);
+    for (i = 0; i < lista.length; i++) {
+        texto = String(lista[i]);
+        output = texto.includes(index);
+        if (output == true) {
+            document.getElementsByTagName('tr')[i + 1].remove()
+            break;
+        }
+    }
 }
