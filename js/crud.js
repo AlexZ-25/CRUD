@@ -1,4 +1,4 @@
-sp = [
+const sp = [
     {
         "Id": 'T1E0',
         "Nombre": 'Piloto',
@@ -146,13 +146,42 @@ sp = [
     }
 ];
 
-
-
-for (i = 0; i<sp.length; i++){
-    //let lista = document.getElementsByTagName('option')
+// Insertar las opciones de episodios
+for (i = 0; i < sp.length; i++) {
     episodio = sp[i]
     let listaEpisodios = document.createElement('Option');
     listaEpisodios.innerHTML = episodio.Nombre;
-    // console.log(listaEpisodios);
     document.getElementsByTagName('select')[0].appendChild(listaEpisodios);
+}
+
+// Botón agregar
+let agregar = () => {
+    const selectedOption = document.getElementById('inputGroupSelect01').value;
+    const defaultOption = document.getElementById('defaultOption').value;
+    const addedList = document.getElementsByTagName('tr');
+    let output = false
+    for (i = 0; i < addedList.length; i++) {
+        let textoInterior = addedList[i].innerText;
+        output = textoInterior.includes(selectedOption);
+        if (output == true){
+            alert('Este episodio ya ha sido añadido. Favor de seleccionar uno diferente.')
+            break;
+        }
+            
+    }
+    if (selectedOption != defaultOption && output == false) {   
+        let tbody = document.getElementsByTagName('tbody');
+        selectedEpisode = sp.find(value => value.Nombre == selectedOption);
+        const buttons = `<button type="button" class="btn btn-primary" id="${selectedEpisode.Nombre}" onclick="editar(this.id)">Editar</button><button type="button" class="btn btn-danger" onclick="eliminar()">Eliminar</button>`;
+        let addedEpisode = document.createElement('tr');
+        addedEpisode.innerHTML = `<td>${selectedEpisode.Id}</td><td>${selectedOption}</td><td>${buttons}</td>`;
+        tbody[0].appendChild(addedEpisode);
+        document.getElementById('inputGroupSelect01').value = defaultOption
+    }
+    //console.log(document.getElementsByTagName('tr')[1].innerText);
+}
+
+// Botón editar
+let editar = (id) => {
+    console.log(id);
 }
