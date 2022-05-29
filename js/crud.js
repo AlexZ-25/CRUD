@@ -211,8 +211,6 @@ let editarDos = (episodio) => {
         const selectedEpisode = sp.find(value => value.Nombre == selectedOption);
         const buttons = `<button type="button" class="btn btn-primary" id='${selectedOption}' onclick="editarUno(this.id)">Editar</button><button type="button" class="btn btn-danger" id='${selectedOption}' onclick="eliminar(this.id)">Eliminar</button>`;
         document.getElementsByClassName('btn btn-primary editar')[0].remove();
-        // botonEditar = document.getElementById(episodio);
-        // botonEditar.remove();
         lista = document.getElementsByTagName('tr');
         for (i = 0; i < lista.length; i++) {
             texto = String(lista[i].innerText);
