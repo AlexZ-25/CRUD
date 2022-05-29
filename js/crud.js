@@ -172,7 +172,8 @@ let agregar = () => {
         let tbody = document.getElementsByTagName('tbody');
         let largoLista = document.getElementsByTagName('tr');
         const selectedEpisode = sp.find(value => value.Nombre == selectedOption);
-        const buttons = `<button type="button" class="btn btn-primary" id="${selectedEpisode.Nombre}" onclick="editarUno(this.id, ${largoLista.length})">Editar</button><button type="button" class="btn btn-danger" onclick="eliminar(this.id)">Eliminar</button>`;
+        const nameEpisode = selectedEpisode.Nombre;
+        const buttons = `<button type="button" class="btn btn-primary" id='${nameEpisode}' onclick="editarUno(this.id)">Editar</button><button type="button" class="btn btn-danger" id='${nameEpisode}' onclick="eliminar(this.id)">Eliminar</button>`;
         let addedEpisode = document.createElement('tr');
         addedEpisode.innerHTML = `<td>${selectedEpisode.Id}</td><td>${selectedOption}</td><td>${buttons}</td>`;
         tbody[0].appendChild(addedEpisode);
@@ -181,26 +182,39 @@ let agregar = () => {
 }
 
 // Botones editar
-let editarUno = (id, index) => {
-    document.getElementById('inputGroupSelect01').value = id
-    let botones = document.getElementById('botones');
-    let botonEditar = document.createElement('div');
-    botonEditar.innerHTML = `<button class="btn btn-primary" id="editarBoton" onclick="editarDos(${index})">Editar</button>`;
-    botones.appendChild(botonEditar);
+let editarUno = (episodio) => {
+    cuadrosEdicion = document.getElementsByClassName('btn btn-primary editar').length;
+    if (cuadrosEdicion > 0) {
+        alert('Ya hay un cuadro de edición abierto. Favor de terminar el proceso de edición actual.');
+    } else {
+        document.getElementById('inputGroupSelect01').value = episodio
+        let botones = document.getElementById('botones');
+        let botonEditar = document.createElement('div');
+        botonEditar.innerHTML = `<button class="btn btn-primary editar" id="${episodio}" onclick="editarDos(this.id)">Editar</button>`;
+        botones.appendChild(botonEditar);
+    }
+
 }
-let editarDos = (index) => {
+let editarDos = (episodio) => {
     const selectedOption = document.getElementById('inputGroupSelect01').value;
-    const selectedEpisode = sp.find(value => value.Nombre == selectedOption);
-    const buttons = `<button type="button" class="btn btn-primary" id="${selectedEpisode.Nombre}" onclick="editarUno(this.id, ${index})">Editar</button><button type="button" class="btn btn-danger" onclick="eliminar()">Eliminar</button>`;
-    botonEditar = document.getElementById('editarBoton');
-    botonEditar.remove();
-    lista = document.getElementsByTagName('tr');
-    for (i = 0; i < lista.length; i++) {
-        texto = String(lista[i]);
-        output = texto.includes(index);
-        if (output == true) {
-            document.getElementsByTagName('tr')[i + 1].innerHTML = `<td>${selectedEpisode.Id}</td><td>${selectedOption}</td><td>${buttons}</td>`;
-            break;
+    if (selectedOption.includes('Lista de episodios')) {
+        alert('Favor de seleccionar un episodio válido.')
+    } else {
+        const selectedEpisode = sp.find(value => value.Nombre == selectedOption);
+        const buttons = `<button type="button" class="btn btn-primary" id='${selectedOption}' onclick="editarUno(this.id)">Editar</button><button type="button" class="btn btn-danger" id='${selectedOption}' onclick="eliminar(this.id)">Eliminar</button>`;
+        botonEditar = document.getElementById(episodio);
+        botonEditar.remove();
+        lista = document.getElementsByTagName('tr');
+        for (i = 0; i < lista.length; i++) {
+            texto = String(lista[i].innerText);
+            // console.log(episodio);
+            output = texto.includes(episodio);
+            if (output == true) {
+                document.getElementsByTagName('tr')[i].innerHTML = `<td>${selectedEpisode.Id}</td><td>${selectedOption}</td><td>${buttons}</td>`;
+                // document.getElementsByTagName('tr')[i].id = selectedOption;
+                // console.log(document.getElementsByTagName('tr')[i].id)
+                break;
+            }
         }
     }
 }
@@ -210,10 +224,11 @@ let eliminar = (index) => {
     lista = document.getElementsByTagName('tr');
     // console.log(lista[1]);
     for (i = 0; i < lista.length; i++) {
-        texto = String(lista[i]);
+        texto = String(lista[i].innerText);
         output = texto.includes(index);
         if (output == true) {
-            document.getElementsByTagName('tr')[i + 1].remove()
+            console.log(i);
+            document.getElementsByTagName('tr')[i].remove()
             break;
         }
     }
