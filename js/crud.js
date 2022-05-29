@@ -199,7 +199,7 @@ let editarDos = (index) => {
         texto = String(lista[i]);
         output = texto.includes(index);
         if (output == true) {
-            document.getElementsByTagName('tr')[index].innerHTML = `<td>${selectedEpisode.Id}</td><td>${selectedOption}</td><td>${buttons}</td>`;
+            document.getElementsByTagName('tr')[i + 1].innerHTML = `<td>${selectedEpisode.Id}</td><td>${selectedOption}</td><td>${buttons}</td>`;
             break;
         }
     }
