@@ -164,24 +164,41 @@ let agregar = () => {
         let textoInterior = addedList[i].innerText;
         output = textoInterior.includes(selectedOption);
         if (output == true){
-            alert('Este episodio ya ha sido añadido. Favor de seleccionar uno diferente.')
+            alert('Este episodio ya ha sido añadido. Favor de seleccionar uno diferente.');
             break;
         }
-            
     }
     if (selectedOption != defaultOption && output == false) {   
         let tbody = document.getElementsByTagName('tbody');
-        selectedEpisode = sp.find(value => value.Nombre == selectedOption);
-        const buttons = `<button type="button" class="btn btn-primary" id="${selectedEpisode.Nombre}" onclick="editar(this.id)">Editar</button><button type="button" class="btn btn-danger" onclick="eliminar()">Eliminar</button>`;
+        let largoLista = document.getElementsByTagName('tr');
+        const selectedEpisode = sp.find(value => value.Nombre == selectedOption);
+        const buttons = `<button type="button" class="btn btn-primary" id="${selectedEpisode.Nombre}" onclick="editarUno(this.id, ${largoLista.length})">Editar</button><button type="button" class="btn btn-danger" onclick="eliminar(this.id)">Eliminar</button>`;
         let addedEpisode = document.createElement('tr');
         addedEpisode.innerHTML = `<td>${selectedEpisode.Id}</td><td>${selectedOption}</td><td>${buttons}</td>`;
         tbody[0].appendChild(addedEpisode);
         document.getElementById('inputGroupSelect01').value = defaultOption
     }
-    //console.log(document.getElementsByTagName('tr')[1].innerText);
 }
 
-// Botón editar
-let editar = (id) => {
-    console.log(id);
+// Botones editar
+let editarUno = (id, index) => {
+    document.getElementById('inputGroupSelect01').value = id
+    let botones = document.getElementById('botones');
+    let botonEditar = document.createElement('div');
+    botonEditar.innerHTML = `<button class="btn btn-primary" id="editarBoton" onclick="editarDos(${index})">Editar</button>`;
+    botones.appendChild(botonEditar);
+}
+let editarDos = (index) => {
+    const selectedOption = document.getElementById('inputGroupSelect01').value;
+    const selectedEpisode = sp.find(value => value.Nombre == selectedOption);
+    const buttons = `<button type="button" class="btn btn-primary" id="${selectedEpisode.Nombre}" onclick="editarUno(this.id, ${index})">Editar</button><button type="button" class="btn btn-danger" onclick="eliminar()">Eliminar</button>`;
+    botonEditar = document.getElementById('editarBoton');
+    botonEditar.remove();
+    document.getElementsByTagName('tr')[index].innerHTML = `<td>${selectedEpisode.Id}</td><td>${selectedOption}</td><td>${buttons}</td>`;
+}
+
+// Botón eliminar
+let eliminar = (index) => {
+    
+    document.getElementsByTagName('tr')[index].remove()
 }
