@@ -179,6 +179,10 @@ let agregar = () => {
         tbody[0].appendChild(addedEpisode);
         document.getElementById('inputGroupSelect01').value = defaultOption
     }
+    cuadrosEdicion = document.getElementsByClassName('btn btn-primary editar').length;
+    console.log(cuadrosEdicion);
+    if (cuadrosEdicion > 0)
+        document.getElementsByClassName('btn btn-primary editar')[0].remove();
 }
 
 // Botones editar
@@ -189,30 +193,33 @@ let editarUno = (episodio) => {
     } else {
         document.getElementById('inputGroupSelect01').value = episodio
         let botones = document.getElementById('botones');
-        let botonEditar = document.createElement('div');
-        botonEditar.innerHTML = `<button class="btn btn-primary editar" id="${episodio}" onclick="editarDos(this.id)">Editar</button>`;
+        let botonEditar = document.createElement('button');
+        botonEditar.className = 'btn btn-primary editar';
+        botonEditar.id = episodio;
+        botonEditar.setAttribute("onclick","editarDos(this.id);");
+        botonEditar.innerText = 'Editar'
         botones.appendChild(botonEditar);
     }
 
 }
 let editarDos = (episodio) => {
     const selectedOption = document.getElementById('inputGroupSelect01').value;
+    const defaultOption = document.getElementById('defaultOption').value;
     if (selectedOption.includes('Lista de episodios')) {
         alert('Favor de seleccionar un episodio válido.')
     } else {
         const selectedEpisode = sp.find(value => value.Nombre == selectedOption);
         const buttons = `<button type="button" class="btn btn-primary" id='${selectedOption}' onclick="editarUno(this.id)">Editar</button><button type="button" class="btn btn-danger" id='${selectedOption}' onclick="eliminar(this.id)">Eliminar</button>`;
-        botonEditar = document.getElementById(episodio);
-        botonEditar.remove();
+        document.getElementsByClassName('btn btn-primary editar')[0].remove();
+        // botonEditar = document.getElementById(episodio);
+        // botonEditar.remove();
         lista = document.getElementsByTagName('tr');
         for (i = 0; i < lista.length; i++) {
             texto = String(lista[i].innerText);
-            // console.log(episodio);
             output = texto.includes(episodio);
             if (output == true) {
                 document.getElementsByTagName('tr')[i].innerHTML = `<td>${selectedEpisode.Id}</td><td>${selectedOption}</td><td>${buttons}</td>`;
-                // document.getElementsByTagName('tr')[i].id = selectedOption;
-                // console.log(document.getElementsByTagName('tr')[i].id)
+                document.getElementById('inputGroupSelect01').value = defaultOption
                 break;
             }
         }
@@ -222,7 +229,6 @@ let editarDos = (episodio) => {
 // Botón eliminar
 let eliminar = (index) => {
     lista = document.getElementsByTagName('tr');
-    // console.log(lista[1]);
     for (i = 0; i < lista.length; i++) {
         texto = String(lista[i].innerText);
         output = texto.includes(index);
