@@ -170,12 +170,15 @@ let agregar = () => {
     }
     if (selectedOption != defaultOption && output == false) {
         let tbody = document.getElementsByTagName('tbody');
-        let largoLista = document.getElementsByTagName('tr');
         const selectedEpisode = sp.find(value => value.Nombre == selectedOption);
         const nameEpisode = selectedEpisode.Nombre;
         const buttons = `<button type="button" class="btn btn-primary" id='${nameEpisode}' onclick="editarUno(this.id)">Editar</button><button type="button" class="btn btn-danger" id='${nameEpisode}' onclick="eliminar(this.id)">Eliminar</button>`;
         let addedEpisode = document.createElement('tr');
         addedEpisode.innerHTML = `<td>${selectedEpisode.Id}</td><td>${selectedOption}</td><td>${buttons}</td>`;
+        console.log(addedEpisode);
+        localStorage.setItem('addedEpisode',String(addedEpisode));
+        addedEpisode = localStorage.getItem('addedEpisode');
+        console.log(addedEpisode);
         tbody[0].appendChild(addedEpisode);
         document.getElementById('inputGroupSelect01').value = defaultOption
     }
@@ -205,6 +208,16 @@ let editarUno = (episodio) => {
 let editarDos = (episodio) => {
     const selectedOption = document.getElementById('inputGroupSelect01').value;
     const defaultOption = document.getElementById('defaultOption').value;
+    const addedList = document.getElementsByTagName('tr');
+    let output = false
+    for (i = 0; i < addedList.length; i++) {
+        let textoInterior = addedList[i].innerText;
+        output = textoInterior.includes(selectedOption);
+        if (output == true) {
+            alert('Este episodio ya ha sido añadido. Favor de seleccionar uno diferente.');
+            break;
+        }
+    }
     if (selectedOption.includes('Lista de episodios')) {
         alert('Favor de seleccionar un episodio válido.')
     } else {
