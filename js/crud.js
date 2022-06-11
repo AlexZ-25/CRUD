@@ -146,6 +146,19 @@ const sp = [
     }
 ];
 
+// Tomar el string del storage
+let storedEpisodes = localStorage.getItem('storedEpisodes')
+if (storedEpisodes == null || storedEpisodes == '') {
+    localStorage.setItem('storedEpisodes', '');
+} else {
+    let storedEpisodesArray = storedEpisodes.split('|');
+    for (i = 0; i < storedEpisodesArray.length; i++) {
+        let episodes = document.createElement('tr');
+        episodes.innerHTML = storedEpisodesArray[i];
+        document.getElementsByTagName('tbody')[0].appendChild(episodes);
+    }
+}
+
 // Insertar las opciones de episodios
 for (i = 0; i < sp.length; i++) {
     episodio = sp[i]
@@ -174,11 +187,13 @@ let agregar = () => {
         const nameEpisode = selectedEpisode.Nombre;
         const buttons = `<button type="button" class="btn btn-primary" id='${nameEpisode}' onclick="editarUno(this.id)">Editar</button><button type="button" class="btn btn-danger" id='${nameEpisode}' onclick="eliminar(this.id)">Eliminar</button>`;
         let addedEpisode = document.createElement('tr');
+        // Agregar el string al storage
+        if (localStorage.getItem('storedEpisodes') == '') {
+            localStorage.setItem('storedEpisodes', `<td>${selectedEpisode.Id}</td><td>${selectedOption}</td><td>${buttons}</td>`)
+        } else {
+            localStorage.setItem('storedEpisodes', localStorage.getItem('storedEpisodes') + `|<td>${selectedEpisode.Id}</td><td>${selectedOption}</td><td>${buttons}</td>`);
+        }
         addedEpisode.innerHTML = `<td>${selectedEpisode.Id}</td><td>${selectedOption}</td><td>${buttons}</td>`;
-        console.log(addedEpisode);
-        localStorage.setItem('addedEpisode',String(addedEpisode));
-        addedEpisode = localStorage.getItem('addedEpisode');
-        console.log(addedEpisode);
         tbody[0].appendChild(addedEpisode);
         document.getElementById('inputGroupSelect01').value = defaultOption
     }
@@ -199,8 +214,8 @@ let editarUno = (episodio) => {
         let botonEditar = document.createElement('button');
         botonEditar.className = 'btn btn-primary editar';
         botonEditar.id = episodio;
-        botonEditar.setAttribute("onclick","editarDos(this.id);");
-        botonEditar.innerText = 'Editar'
+        botonEditar.setAttribute("onclick", "editarDos(this.id);");
+        botonEditar.innerText = 'Actualizar'
         botones.appendChild(botonEditar);
     }
 
@@ -220,6 +235,8 @@ let editarDos = (episodio) => {
     }
     if (selectedOption.includes('Lista de episodios')) {
         alert('Favor de seleccionar un episodio válido.')
+    } else if (output == true) {
+        document.getElementById('inputGroupSelect01').value = defaultOption
     } else {
         const selectedEpisode = sp.find(value => value.Nombre == selectedOption);
         const buttons = `<button type="button" class="btn btn-primary" id='${selectedOption}' onclick="editarUno(this.id)">Editar</button><button type="button" class="btn btn-danger" id='${selectedOption}' onclick="eliminar(this.id)">Eliminar</button>`;
@@ -231,11 +248,19 @@ let editarDos = (episodio) => {
             if (output == true) {
                 document.getElementsByTagName('tr')[i].innerHTML = `<td>${selectedEpisode.Id}</td><td>${selectedOption}</td><td>${buttons}</td>`;
                 document.getElementById('inputGroupSelect01').value = defaultOption
+                // Recrear string en storage
+                let currentListEpisodes = document.getElementsByTagName('tr')
+                localStorage.setItem('storedEpisodes', currentListEpisodes[1].innerHTML);
+                for (i = 2; i < currentListEpisodes.length; i++) {
+                    localStorage.setItem('storedEpisodes', localStorage.getItem('storedEpisodes') + '|' + currentListEpisodes[i].innerHTML)
+                }
                 break;
             }
         }
     }
 }
+
+
 
 // Botón eliminar
 let eliminar = (index) => {
@@ -248,5 +273,11 @@ let eliminar = (index) => {
             document.getElementsByTagName('tr')[i].remove()
             break;
         }
+    }
+    // Recrear string en storage
+    let currentListEpisodes = document.getElementsByTagName('tr')
+    localStorage.setItem('storedEpisodes', currentListEpisodes[1].innerHTML);
+    for (i = 2; i < currentListEpisodes.length; i++) {
+        localStorage.setItem('storedEpisodes', localStorage.getItem('storedEpisodes') + '|' + currentListEpisodes[i].innerHTML)
     }
 }
